@@ -6,6 +6,9 @@ target 'GoodsmartNews' do
   use_frameworks!
 
   # Pods for GoodsmartNews
+  pod 'Alamofire'
+  pod 'SVProgressHUD'
+  pod 'RxSwift', '6.5.0'
 
   target 'GoodsmartNewsTests' do
     inherit! :search_paths
