@@ -14,4 +14,7 @@ protocol DatabaseHelper {
     
     func insertStockValues(value: StockValue) -> Observable<Void>
     func getStockValues() -> Observable<[StockValue]>
+    
+    func insertArticle(article: ApiArticleItem) -> Observable<Void>
+    func getArticles() -> Observable<[ApiArticleItem]>
 }

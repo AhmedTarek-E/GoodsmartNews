@@ -9,10 +9,18 @@ import Foundation
 import RxSwift
 
 class NewsRepositoryImp: NewsRepository {
+    init(dataSource: NewsDataSource) {
+        self.dataSource = dataSource
+    }
+    
+    private let dataSource: NewsDataSource
     
     func getNewsArticles() -> Observable<[Article]> {
-        //TODO: use data source
-        return Observable.just([])
+        return dataSource.getNews().map { articles in
+            return articles.map { item in
+                item.map()
+            }
+        }
     }
     
 }

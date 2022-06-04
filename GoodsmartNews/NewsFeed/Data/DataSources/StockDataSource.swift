@@ -16,7 +16,7 @@ class StockDataSource {
         self.database = database
     }
     
-    let database: DatabaseHelper
+    private let database: DatabaseHelper
     
     func getStockTickers() -> Observable<[StockTickerDBEntity]> {
         return getStockTickerWithValues()

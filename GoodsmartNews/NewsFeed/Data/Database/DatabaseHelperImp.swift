@@ -24,6 +24,11 @@ class DatabaseHelperImp: DatabaseHelper {
         return Observable<Void>.create { [weak self] observer in
             self?.context.performAndWait { [weak self] in
                 guard let self = self else { return }
+                
+                defer {
+                    observer.onCompleted()
+                }
+                
                 ticker.createInsertRequest(context: self.context)
                 
                 do {
@@ -42,6 +47,10 @@ class DatabaseHelperImp: DatabaseHelper {
             
             self?.context.performAndWait { [weak self] in
                 guard let self = self else { return }
+                
+                defer {
+                    observer.onCompleted()
+                }
                 
                 let request = StockTickerDBEntity
                     .createFetchRequest(context: self.context)
@@ -68,6 +77,10 @@ class DatabaseHelperImp: DatabaseHelper {
                 guard let self = self else { return }
                 value.createInsertRequest(context: self.context)
                 
+                defer {
+                    observer.onCompleted()
+                }
+                
                 do {
                     try self.context.save()
                 } catch let error {
@@ -85,6 +98,10 @@ class DatabaseHelperImp: DatabaseHelper {
             self?.context.performAndWait { [weak self] in
                 guard let self = self else { return }
                 
+                defer {
+                    observer.onCompleted()
+                }
+                
                 let request = StockValue
                     .createFetchRequest(context: self.context)
                 
@@ -95,6 +112,59 @@ class DatabaseHelperImp: DatabaseHelper {
                         return StockValue.create(using: object)
                     }
                     observer.onNext(values)
+                } catch let error {
+                    observer.onError(error)
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func insertArticle(article: ApiArticleItem) -> Observable<Void> {
+        return Observable<Void>.create { [weak self] observer in
+            self?.context.performAndWait { [weak self] in
+                guard let self = self else { return }
+                
+                defer {
+                    observer.onCompleted()
+                }
+                
+                article.createInsertRequest(context: self.context)
+                
+                do {
+                    try self.context.save()
+                } catch let error {
+                    observer.onError(error)
+                }
+            }
+            
+            return Disposables.create()
+        }
+
+    }
+    
+    func getArticles() -> Observable<[ApiArticleItem]> {
+        return Observable<[ApiArticleItem]>.create { [weak self] observer in
+            
+            self?.context.performAndWait { [weak self] in
+                guard let self = self else { return }
+                
+                defer {
+                    observer.onCompleted()
+                }
+                
+                let request = ApiArticleItem
+                    .createFetchRequest(context: self.context)
+                
+                do {
+                    let objects = try self.context.fetch(request)
+                    
+                    let articles = objects.map { object in
+                        return ApiArticleItem.create(using: object)
+                    }
+                    observer.onNext(articles)
+                    
                 } catch let error {
                     observer.onError(error)
                 }
