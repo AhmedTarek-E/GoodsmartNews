@@ -125,7 +125,11 @@ class NewsDataSource {
             if let self = self {
                 disposables.append(
                     self.database.getArticles()
-                        .subscribe(on: ConcurrentDispatchQueueScheduler(queue: .global()))
+                        .subscribe(
+                            on: ConcurrentDispatchQueueScheduler(
+                                queue: .global()
+                            )
+                        )
                         .subscribe { entities in
                             if entities.isEmpty {
                                 let items = Array(articles.prefix(10))
