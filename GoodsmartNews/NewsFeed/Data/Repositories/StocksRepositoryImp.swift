@@ -15,12 +15,12 @@ class StocksRepositoryImp: StocksRepository {
     
     private let dataSource: StockDataSource
     
-    private var latestRandomNumber: Int = 0
+    private var latestRandomNumber: Int = -1
     private var latestGenerationDate = Date.now
     
     func getStockTickers() -> Observable<[StockTicker]> {
         let timePassed = Date.now.timeIntervalSince1970 - latestGenerationDate.timeIntervalSince1970
-        if timePassed >= 1 {
+        if timePassed >= 1 || latestRandomNumber < 0 {
             latestRandomNumber = Int.random(in: 0...100)
             latestGenerationDate = Date.now
         }
@@ -29,7 +29,7 @@ class StocksRepositoryImp: StocksRepository {
             .withUnretained(self)
             .map { (repository, entities) in
                 return entities.map { entity in
-                    let valueIndex = repository.latestRandomNumber / entity.values.count
+                    let valueIndex = repository.latestRandomNumber % entity.values.count
                     return StockTicker(
                         name: entity.name,
                         value: entity.values[valueIndex].value

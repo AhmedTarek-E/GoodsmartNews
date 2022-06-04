@@ -175,7 +175,7 @@ class StockDataSource {
                 let price = String(columns[1]).trimmingCharacters(in: [" "])
                 
                 return StockRow(
-                    stock: String(columns[0]),
+                    stock: String(columns[0]).replacingOccurrences(of: "\"", with: ""),
                     price: Double(price) ?? 0
                 )
             }

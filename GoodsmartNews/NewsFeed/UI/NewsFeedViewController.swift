@@ -52,8 +52,13 @@ class NewsFeedViewController: UIViewController {
             .disposed(by: disposeBag)
 
         setupCollectionView()
+        setupNavBar()
         
         viewModel.loadData()
+    }
+    
+    private func setupNavBar() {
+        navigationItem.title = "News Feed"
     }
     
     private func renderState(state: NewsFeedState) {
@@ -160,18 +165,19 @@ extension NewsFeedViewController {
     
     private func generateStocksLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1/3.5),
+            widthDimension: .fractionalWidth(1/4),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
+            widthDimension: .fractionalWidth(1.1),
             heightDimension: .estimated(40)
         )
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
-            subitems: [item]
+            subitem: item,
+            count: 4
         )
         group.interItemSpacing = NSCollectionLayoutSpacing.fixed(8)
         
@@ -180,6 +186,7 @@ extension NewsFeedViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header]
         section.orthogonalScrollingBehavior = .continuous
+        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
         return section
     }
     
@@ -196,26 +203,27 @@ extension NewsFeedViewController {
     
     private func generateLatestNewsLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1/1.25),
+            widthDimension: .fractionalWidth(1),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .fractionalWidth(2/3)
+            widthDimension: .fractionalWidth(1/1.25),
+            heightDimension: .fractionalWidth(5/9)
         )
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
             subitems: [item]
         )
-        group.interItemSpacing = NSCollectionLayoutSpacing.fixed(8)
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 8)
         
         let header = generateHeader()
         
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header]
         section.orthogonalScrollingBehavior = .continuous
+        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 0, trailing: 8)
         return section
     }
     
@@ -228,19 +236,20 @@ extension NewsFeedViewController {
         
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(100)
+            heightDimension: .fractionalWidth(1.1)
         )
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
             subitem: item,
             count: 1
         )
-        group.interItemSpacing = NSCollectionLayoutSpacing.fixed(8)
         
         let header = generateHeader()
         
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header]
+        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+        section.interGroupSpacing = 24
         return section
     }
 }

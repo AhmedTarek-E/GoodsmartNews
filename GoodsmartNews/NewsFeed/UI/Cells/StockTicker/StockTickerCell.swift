@@ -25,7 +25,7 @@ class StockTickerCell: UICollectionViewCell {
 
 extension StockTicker {
     var formattedValue: String {
-        let trimmed = Int(value*100)/100
+        let trimmed = Double(Int(value*100))/100.0
         return "\(trimmed) USD"
     }
     
