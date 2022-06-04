@@ -16,8 +16,14 @@ class DatabaseHelperImp: DatabaseHelper {
      
     private let persistentContainer: NSPersistentContainer
     
-    private var context: NSManagedObjectContext {
-        return persistentContainer.newBackgroundContext()
+    private lazy var context: NSManagedObjectContext = {
+        let privateMoc = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        privateMoc.parent = persistentContainer.viewContext
+        return privateMoc
+    }()
+    
+    private var mainContext: NSManagedObjectContext {
+        return persistentContainer.viewContext
     }
     
     func insertStockTicker(ticker: StockTickerDBEntity) -> Observable<Void> {
@@ -33,6 +39,16 @@ class DatabaseHelperImp: DatabaseHelper {
                 
                 do {
                     try self.context.save()
+                    
+                    self.mainContext.performAndWait {
+                        do {
+                            try self.mainContext.save()
+                            observer.onNext(())
+                        } catch let error {
+                            observer.onError(error)
+                        }
+                    }
+                    
                 } catch let error {
                     observer.onError(error)
                 }
@@ -41,6 +57,7 @@ class DatabaseHelperImp: DatabaseHelper {
             return Disposables.create()
         }
     }
+    
     
     func getStockTickers() -> Observable<[StockTickerDBEntity]> {
         return Observable<[StockTickerDBEntity]>.create { [weak self] observer in
@@ -83,6 +100,14 @@ class DatabaseHelperImp: DatabaseHelper {
                 
                 do {
                     try self.context.save()
+                    self.mainContext.performAndWait {
+                        do {
+                            try self.mainContext.save()
+                            observer.onNext(())
+                        } catch let error {
+                            observer.onError(error)
+                        }
+                    }
                 } catch let error {
                     observer.onError(error)
                 }
@@ -134,6 +159,14 @@ class DatabaseHelperImp: DatabaseHelper {
                 
                 do {
                     try self.context.save()
+                    self.mainContext.performAndWait {
+                        do {
+                            try self.mainContext.save()
+                            observer.onNext(())
+                        } catch let error {
+                            observer.onError(error)
+                        }
+                    }
                 } catch let error {
                     observer.onError(error)
                 }

@@ -82,7 +82,7 @@ class StockDataSource {
                 }.flatMap { innerArray in
                     return innerArray
                 }
-                
+                var count = 0
                 disposable = Observable.concat(observables)
                     .subscribe(
                         on: ConcurrentDispatchQueueScheduler.init(
@@ -91,8 +91,11 @@ class StockDataSource {
                     )
                     .subscribe(
                         onNext: { _ in
-                            observer.onNext(())
-                            observer.onCompleted()
+                            count += 1
+                            if count == observables.count {
+                                observer.onNext(())
+                                observer.onCompleted()
+                            }
                         },
                         onError: { error in
                             observer.onError(error)

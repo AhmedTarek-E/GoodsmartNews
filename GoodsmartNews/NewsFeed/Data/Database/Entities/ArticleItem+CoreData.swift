@@ -47,7 +47,7 @@ extension ApiArticleItem {
             articleDescription: object.value(forKey: "desc") as? String,
             url: object.value(forKey: "url") as? String,
             urlToImage: object.value(forKey: "urlToImage") as? String,
-            publishedAt: object.value(forKey: "publishedAt") as? Date,
+            publishedAt: object.value(forKey: "publishedAt") as? String ,
             content: object.value(forKey: "content") as? String
         )
     }

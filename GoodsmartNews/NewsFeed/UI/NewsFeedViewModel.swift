@@ -55,10 +55,16 @@ class NewsFeedViewModel {
         )
         .subscribe { [weak self] (stockTickers, articles) in
             guard let self = self else { return }
+            let items: [Article]
+            if case .success(let currentArticles) = self.currentState.news {
+                items = currentArticles + articles
+            } else {
+                items = articles
+            }
             self.stateSubject.onNext(
                 self.currentState.reduce(
                     stockTickers: .success(data: stockTickers),
-                    news: .success(data: articles)
+                    news: .success(data: items)
                 )
             )
         } onError: { [weak self] error in

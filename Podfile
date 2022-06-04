@@ -9,6 +9,7 @@ target 'GoodsmartNews' do
   pod 'Alamofire'
   pod 'SVProgressHUD'
   pod 'RxSwift', '6.5.0'
+  pod 'PINRemoteImage'
 
   target 'GoodsmartNewsTests' do
     inherit! :search_paths
